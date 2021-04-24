@@ -19,7 +19,6 @@
     <link href="https://pranabendra.github.io/blog/theme/pygments.css" rel="stylesheet">
 
     <!-- So Firefox can bookmark->"abo this site" -->
-        <link href="https://pranabendra.github.io/blog/feeds/all.atom.xml" rel="alternate" title="Blog" type="application/atom+xml">
 
 </head>
 
@@ -61,8 +60,8 @@
 
     <div class='article'>
         <div class="content-title">
-            <a href="https://pranabendra.github.io/blog/my-first-blog-post.html"><h1>My First Blog Post</h1></a>
-Sat 11 July 2020
+            <a href="https://pranabendra.github.io/blog/phase-plot-and-phase-portrait.html"><h1>Phase Plot and Phase Portrait</h1></a>
+Thu 23 July 2020
 
 by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra-prasad-chandra.html">Pranabendra Prasad Chandra</a>
  
@@ -71,12 +70,107 @@ by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra
  
         </div>
         
-        <div><p>I had been thinking about creating my own blog for quite some time now, where I can share my thoughts and experiences. As exams are over, finally I decided to do it.</p>
-<p>Over the course of time, I plan to write about Software Development, Electrical Engineering, Embedded Systems and Photography in general.</p>
-<p>I start this journey, with the hope that - anyone who stumbles upon my blog (and its posts), may find something useful and be benefitted from it. </p></div>
+        <div><h2>Phase Plot and Phase Portrait</h2>
+<p>Using Simulink&reg; and MATLAB&reg;</p>
+<h2>Contents</h2>
+<ul>
+<li>ODE</li>
+<li>Simulink Model</li>
+<li>Defining the state equation</li>
+<li>Phase plane</li>
+<li>Calculating gradient and plotting the vector field</li>
+<li>Check for different initial conditions</li>
+</ul>
+<h3>ODE</h3>
+<div class="highlight"><pre><span></span><code><span class="n">imshow</span><span class="p">(</span><span class="s">&#39;VDP.png&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="image info" src="https://pranabendra.github.io/blog/images/t1-phase-plots/van_der_pol_01.png"></p>
+<h3>Simulink Model</h3>
+<div class="highlight"><pre><span></span><code><span class="n">close</span>
+<span class="s">%</span> <span class="s">Assuming</span> <span class="s">initial</span> <span class="s">condition</span> <span class="s">=</span> <span class="s">(1,0)</span>
+<span class="n">open_system</span><span class="p">(</span><span class="s">&#39;van_der_pol_model&#39;</span><span class="p">)</span>
+<span class="n">fprintf</span><span class="p">(</span><span class="s">&#39;\n&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">simout_x1</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">simout_x2</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+<span class="n">xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;x_1&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;x_2&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="image info" src="https://pranabendra.github.io/blog/images/t1-phase-plots/van_der_pol_02.png">
+<img alt="image info" src="https://pranabendra.github.io/blog/images/t1-phase-plots/van_der_pol_03.png"></p>
+<h3>Defining the state equation</h3>
+<div class="highlight"><pre><span></span><code><span class="n">f</span> <span class="p">=</span> <span class="p">@(</span><span class="n">t</span><span class="p">,</span><span class="n">X</span><span class="p">)</span> <span class="p">[</span><span class="n">X</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="n">X</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">X</span><span class="p">(</span><span class="mi">1</span><span class="p">)];</span>
+</code></pre></div>
+
+
+<h3>Phase plane</h3>
+<div class="highlight"><pre><span></span><code><span class="n">x1</span> <span class="p">=</span> <span class="nb">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">x2</span> <span class="p">=</span> <span class="nb">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="p">=</span> <span class="nb">meshgrid</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">);</span>
+</code></pre></div>
+
+
+<h3>Calculating gradient and plotting the vector field</h3>
+<div class="highlight"><pre><span></span><code><span class="n">u</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="n">v</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="n">t</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">for</span> <span class="s">i</span> <span class="s">=</span> <span class="s">1:numel(x)</span>
+    <span class="n">Xdot</span> <span class="p">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,[</span><span class="n">x</span><span class="p">(</span><span class="nb">i</span><span class="p">);</span> <span class="n">y</span><span class="p">(</span><span class="nb">i</span><span class="p">)]);</span>
+    <span class="n">u</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">Xdot</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">v</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">Xdot</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">end</span>
+
+<span class="s">quiver(x,y,u,v,&#39;r&#39;)</span><span class="p">;</span> <span class="n">figure</span><span class="p">(</span><span class="n">gcf</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;x_1&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;x_2&#39;</span><span class="p">)</span>
+<span class="n">axis</span> <span class="s">tight</span> <span class="s">equal</span><span class="p">;</span>
+<span class="n">hold</span> <span class="s">on</span><span class="p">;</span>
+</code></pre></div>
+
+
+<p><img alt="image info" src="https://pranabendra.github.io/blog/images/t1-phase-plots/van_der_pol_04.png"></p>
+<h3>Check for different initial conditions</h3>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">y20</span> <span class="p">=</span> <span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span>
+    <span class="p">[</span><span class="n">ts</span><span class="p">,</span><span class="n">ys</span><span class="p">]</span> <span class="p">=</span> <span class="n">ode45</span><span class="p">(</span><span class="n">f</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">],[</span><span class="mi">0</span><span class="p">;</span><span class="n">y20</span><span class="p">]);</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span><span class="n">ys</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">ys</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">for</span> <span class="s">y10</span> <span class="s">=</span> <span class="s">-4:2:4</span>
+    <span class="p">[</span><span class="n">ts</span><span class="p">,</span><span class="n">ys</span><span class="p">]</span> <span class="p">=</span> <span class="n">ode45</span><span class="p">(</span><span class="n">f</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">],[</span><span class="n">y10</span><span class="p">;</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span><span class="n">ys</span><span class="p">(:,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">ys</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="n">hold</span> <span class="s">off</span>
+</code></pre></div>
+
+
+<p><img alt="image info" src="https://pranabendra.github.io/blog/images/t1-phase-plots/van_der_pol_05.png"></p></div>
         <hr />
     </div>
 		
+
+ 
+        
+
+ 
+
+    <div class='article'>
+        <a href="https://pranabendra.github.io/blog/my-first-blog-post.html"><h2>My First Blog Post</h2></a>
+        <div class= "well small"> Sat 11 July 2020
+
+by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra-prasad-chandra.html">Pranabendra Prasad Chandra</a>
+ 
+
+
+ </div>
+        <div class="summary"><p>My first step into the world of blogging</p> <a class="btn btn-info xsmall" href="https://pranabendra.github.io/blog/my-first-blog-post.html">read more</a></div>
+    </div>	
+				
 <div class="pagination">
 <ul>
     <li class="prev disabled"><a href="#">&larr; Previous</a></li>
@@ -124,7 +218,6 @@ by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra
 
 
 
-                <li><a href="https://pranabendra.github.io/blog/feeds/all.atom.xml" rel="alternate">Atom feed</a></li>
 
             </ul>
             </div>
@@ -137,6 +230,7 @@ by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra
                 </li>
                 
                 <li><a href="https://pranabendra.github.io/blog/category/personal.html">Personal</a></li>
+                <li><a href="https://pranabendra.github.io/blog/category/technical.html">Technical</a></li>
                    
             </ul>
             </div>
@@ -148,6 +242,8 @@ by <a class="url fn" href="https://pranabendra.github.io/blog/author/pranabendra
                     Tags
                 </li>
 
+                <li><a href="https://pranabendra.github.io/blog/tag/control-systems.html">Control Systems</a></li>
+                <li><a href="https://pranabendra.github.io/blog/tag/matlab.html">MATLAB</a></li>
                 <li><a href="https://pranabendra.github.io/blog/tag/pelican.html">pelican</a></li>
                 <li><a href="https://pranabendra.github.io/blog/tag/python.html">python</a></li>
 
