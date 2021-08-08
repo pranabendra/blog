@@ -38,6 +38,7 @@ SOCIAL = (('GitHub', 'https://github.com/pranabendra'),
           ('500px', 'https://500px.com/pranabendrachandra'),
           ('Facebook', 'https://www.facebook.com/ppc.pranab'),
           ('Google Scholar', 'https://scholar.google.com/citations?user=fVbjLj4AAAAJ&hl=en'),
+          ('Twitter', 'https://twitter.com/PpcPranab'),
           ('YouTube', 'https://www.youtube.com/channel/UC3a-ZFiZ6K_cuJUn7Sb7vfQ'),)
 
 DEFAULT_PAGINATION = 5

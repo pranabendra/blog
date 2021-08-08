@@ -77,4 +77,4 @@ h3 { margin-top: 2.5em; }
 .social a[href*='instagram.com']:before {content: url('./images/icons/instagram.png'); margin-right: 2px; vertical-align: -3px;}
 .social a[href*='500px.com']:before {content: url('./images/icons/500px.png'); margin-right: 2px; vertical-align: -3px;}
 .social a[href*='scholar.google.com']:before {content: url('./images/icons/googlescholar.ico'); margin-right: 2px; vertical-align: -3px;}
-.social a[href*='youtube.com']:before {content: url('./images/icons/youtube-icon.png'); margin-right: 2px; vertical-align: -3px;}
+.social a[href*='youtube.com']:before {content: url('./images/icons/youtube.png'); margin-right: 2px; vertical-align: -3px;}
